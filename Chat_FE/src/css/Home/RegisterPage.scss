@@ -1,0 +1,45 @@
+// SCSS styles for the RegisterForm component
+
+$primary-color: #1890ff;
+$text-color: #333;
+$border-color: #d9d9d9;
+$input-border-radius: 4px;
+
+.register-container {
+  max-width: 400px;
+  margin: 10px auto;
+  
+  h2 {
+    text-align: center;
+    color: $text-color;
+    margin-bottom: 20px;
+  }
+
+  .ant-form {
+    .ant-form-item-label {
+      label {
+        color: $text-color;
+        font-weight: 500;
+      }
+    }
+
+    .ant-input,
+    .ant-input-password {
+      border-radius: $input-border-radius;
+    }
+
+    .ant-input-textarea {
+      border-radius: $input-border-radius;
+    }
+
+    .ant-btn-primary {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      width: 100%;
+      &:hover {
+        background-color: darken($primary-color, 10%);
+        border-color: darken($primary-color, 10%);
+      }
+    }
+  }
+}

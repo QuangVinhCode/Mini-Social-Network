@@ -1,0 +1,35 @@
+$border-color: #d9d9d9;
+$padding: 8px;
+$button-margin: 5px;
+.post-comment__list {
+  width: 100%;
+}
+// Khung bình luận
+.post-comment__box {
+  height: auto;
+  overflow-y: auto; // Hiện thanh cuộn nếu nội dung vượt quá khung
+  border: 1px solid $border-color; // Định nghĩa viền khung
+  padding: $padding;
+  margin-top: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 150px;
+}
+
+.post-comment__add {
+  display: flex;
+  margin: 5px;
+  .post-comment__btn {
+    margin-top: $button-margin;
+    font-size: 14px;
+    margin: 5px;
+  }
+}
+
+// Nút bình luận
+
+// Thanh tiêu đề bình luận
+.comment-header {
+  font-size: 14px;
+  color: $border-color;
+}

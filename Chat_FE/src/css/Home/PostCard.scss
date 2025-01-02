@@ -1,0 +1,96 @@
+.post-card {
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  width: 500px;
+  height: auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: #007bff solid 1px;
+    .post-card__profile-image {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    .post-card__title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .post-card__subtitle {
+      margin: 0;
+      font-size: 14px;
+      color: #888;
+    }
+  }
+
+  &__content {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+  }
+
+  &__carousel {
+    margin-bottom: 12px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #888;
+    &--item{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: none;
+      justify-content: flex-end;
+    }
+    &--btn{
+      border: none;
+    }
+    .checkLike{
+      color: #007bff;
+    }
+  }
+  &__comments {
+    margin-top: 16px;
+    max-height: 180px; /* Đặt chiều cao cố định cho khung bình luận */
+    overflow-y: auto; /* Thêm thanh cuộn khi cần thiết */
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 8px;
+    background: #f9f9f9;
+
+    &__comment {
+      margin-bottom: 8px;
+      p {
+        margin: 0;
+      }
+    }
+
+    &__scroll-text {
+      text-align: center;
+      color: #007bff;
+      cursor: pointer;
+    }
+  }
+
+  &__comment-input {
+    display: flex;
+    margin-top: 16px;
+    gap: 8px;
+
+    .ant-input {
+      flex: 1;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+.post__container {
+  display: flex;
+  margin: 30px 0px;
+  .post-card__carousel {
+    cursor: pointer;
+  }
+}
+
+.post__img {
+  width: 60%;
+  img {
+    height: 300px;
+  }
+}
+
+.post__content {
+  width: 40%;
+  .post__footer {
+    display: flex;
+    justify-content: space-around;
+    &--item {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      .checkLike {
+        color: #007bff;
+      }
+    }
+    &--btn {
+      border: none;
+    }
+  }
+}

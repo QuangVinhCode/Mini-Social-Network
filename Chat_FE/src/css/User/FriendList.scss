@@ -1,0 +1,57 @@
+.friend__container {
+}
+
+.friend__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 1px solid rgba(0, 0, 0, 0.88);
+  padding: 5px 0;
+}
+
+.friend__avatar {
+  margin-left: 10px;
+}
+
+.friend__title {
+  flex-grow: 1;
+  margin: auto 10px;
+}
+
+.friend__status {
+  margin-right: 10px;
+}
+
+.friend__btn {
+  width: 100%;
+}
+
+.friend__list {
+  height: 250px;
+  max-height: 250px;
+  overflow-y: auto;
+  display: flex;
+  column-count: 1;
+  column-gap: 15px;
+  display: block;
+}
+
+.friend__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.friend__item--avatar {
+  margin-right: 10px;
+}
+
+.friend__item--title {
+  flex-grow: 1;
+}
+
+.friend__item--btn {
+  margin-left: 10px;
+}

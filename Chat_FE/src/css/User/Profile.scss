@@ -1,0 +1,28 @@
+.profile__container {
+  display: flex;
+  justify-content: space-around;
+
+  background-color: #f0f2f5;
+  margin: 10px;
+}
+.profile__friendly {
+  background-color: #ffff;
+  padding: 5px;
+  width: 30%;
+}
+
+.profile__content {
+  width: 70%;
+}
+
+.ant-card {
+  border-radius: 10px;
+}
+
+.ant-avatar {
+  border-radius: 50%;
+}
+
+.ant-card-body {
+  padding: 20px;
+}

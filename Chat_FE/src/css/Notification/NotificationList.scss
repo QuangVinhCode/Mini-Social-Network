@@ -1,0 +1,30 @@
+.notification__container {
+  width: 250px;
+  max-height: 300px; // Giới hạn chiều cao để tránh tràn
+  overflow-y: auto; // Cho phép cuộn khi có nhiều thông báo
+  position: absolute;
+  top: 100px; // Điều chỉnh vị trí sao cho không bị che khuất bởi thanh điều hướng
+  right: 50px;
+  background-color: white; // Thay đổi màu nền để dễ nhìn hơn
+  color: black; // Màu chữ dễ đọc hơn
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Tạo bóng cho phần thông báo
+  padding: 10px;
+  transition: opacity 0.3s ease; // Thêm hiệu ứng mờ khi hiển thị
+  opacity: 1;
+  z-index: 999; // Đảm bảo thông báo hiển thị trên các phần tử khác
+  .notification__btn {
+    border: none;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  a {
+    text-decoration: none;
+    p {
+      margin: 10px 0;
+      padding: 5px;
+      background-color: #f1f1f1; // Tạo màu nền cho mỗi thông báo
+      border-radius: 5px;
+    }
+  }
+}

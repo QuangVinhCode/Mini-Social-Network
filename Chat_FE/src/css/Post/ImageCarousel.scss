@@ -1,0 +1,27 @@
+.image-carousel-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 400px; /* Dùng kích thước cố định cho Carousel */
+  object-fit: cover; /* Giữ ảnh đều khít với khung Carousel */
+  background-color: black; /* Thêm nền đen nếu ảnh nhỏ hơn Carousel */
+}
+
+/* Thay đổi màu nền của nút Previous */
+.carousel-control-prev {
+  background-color: black; /* Nền màu đen */
+}
+
+/* Thay đổi màu nền của nút Next */
+.carousel-control-next {
+  background-color: black; /* Nền màu đen */
+}
+
+/* Đổi màu icon bên trong các nút cho phù hợp */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1); /* Đảo màu để hiển thị màu trắng trên nền đen */
+}
