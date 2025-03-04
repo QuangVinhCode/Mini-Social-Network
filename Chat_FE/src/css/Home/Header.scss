@@ -9,31 +9,40 @@
   left: 0;
   width: 100%;
   z-index: 1000;
+
   .header__logo {
     display: flex;
     align-items: center;
   }
+
   .header__logo--item {
     padding: 0px 5px;
+
     .header__logo--search {
       width: 400px;
     }
   }
+
   .header__item {
     display: flex;
     justify-content: space-around;
+
     .header__list--item {
       cursor: pointer;
       padding: 0px 5px;
       align-items: center;
+      display: flex;
+
       .header__badge svg {
         font-size: 30px !important;
         color: rgb(13, 110, 253);
       }
+
       a {
         text-decoration: none;
         font-size: 30px;
       }
+
       .header__badge {
         font-size: 30px;
       }
@@ -53,9 +62,75 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     .header__btn:hover {
       background: linear-gradient(135deg, #ff4b2b, #ff416c);
       transform: scale(1.05);
+    }
+  }
+}
+
+.hamburger {
+  display: none;
+}
+
+.header__text{
+  display: none;
+}
+@media screen and (width: 480px) {
+  .header__container {
+    flex-direction: column;
+    padding: 0;
+    .header__logo {
+      flex-direction: column;
+      .header__logo--item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        .hamburger {
+          display: block; 
+          cursor: pointer;
+          font-size: 24px;
+        }
+       
+        .header__logo--search {
+          margin-top: 5px;
+        }
+
+      }
+      .header__search{
+        justify-content: center;
+        padding: 5px 0px;
+      }
+    }
+
+    .header__item {
+      flex-direction: column;
+      display: none;
+      .header__list--item {
+        flex-direction: column;
+        border-bottom: #a18cd1 solid 1px;
+        .header__badge svg {
+          margin-top: -10px;
+        }
+        .header__text {
+          color: black;
+          padding: 2px 4px;
+        }
+      }
+
+      .header__btn_container {
+        border-top: #a18cd1 solid 1px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+    .header__item.active {
+      display: block;
+    }
+    .header__text{
+      display: inline-block;
     }
   }
 }

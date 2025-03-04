@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_POST, API_IMAGE } from "./constant";
+import { API_POST } from "./constant";
 
 export default class PostService {
   getToken = () => {
@@ -46,13 +46,5 @@ export default class PostService {
 
   checkLike = async (postId, userId) => {
     return await axios.get(API_POST + "/like/" + postId + "/" + userId);
-  };
-
-  static getImage = (filename) => {
-    return API_POST + "/img/" + filename;
-  };
-
-  static getImageDetails = (filename) => {
-    return API_IMAGE + filename;
   };
 }

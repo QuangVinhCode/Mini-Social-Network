@@ -11,7 +11,7 @@ const ImageCarousel = ({ images }) => {
         {images.map((image, index) => (
           <Carousel.Item key={index}>
             <img
-              src={PostService.getImageDetails(image)}
+              src={image}
               alt={`Slide ${index + 1}`}
             />
           </Carousel.Item>

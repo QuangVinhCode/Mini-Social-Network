@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Avatar, Button, Carousel, Input } from "antd";
+import { Avatar, Button, Input } from "antd";
 import "../../css/Home/PostCard.scss";
 import PostService from "../../services/postService";
 import withRouter from "../../helpers/withRouter.js";
@@ -11,6 +11,7 @@ import {
 } from "../../redux/actions/commentAction.jsx";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
+
 class PostCard extends Component {
   constructor(props) {
     super(props);
@@ -22,12 +23,13 @@ class PostCard extends Component {
     };
     this.postService = new PostService();
   }
+
   async displayComments() {
     const { post, getCommentsByPost } = this.props;
     try {
-      const comments = await getCommentsByPost(post._id); // Gọi action và nhận dữ liệu trả về
+      const comments = await getCommentsByPost(post._id);
       if (comments) {
-        this.setState({ comments }); // Lưu vào state cục bộ
+        this.setState({ comments });
       }
     } catch (error) {
       console.error("Lỗi khi tải bình luận:", error);
@@ -35,10 +37,6 @@ class PostCard extends Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount");
-  }
-  componentWillMount() {
-    console.log("componentWillMount");
     this.displayComments();
     this.handleCheckLike();
   }
@@ -50,7 +48,6 @@ class PostCard extends Component {
     const { post } = this.props;
     if (userSession) {
       const like = await this.postService.checkLike(post._id, userSession.id);
-      console.log("check Like: ", like.data);
       this.setState({ like: like.data });
     }
   };
@@ -68,49 +65,52 @@ class PostCard extends Component {
     };
     const flag = await this.props.insertComment(comment);
     if (flag) {
-      console.log(flag);
       this.setState({ comment_content: "" });
       this.displayComments();
     }
   };
+
   seeDetails = (id) => {
-    console.log(id);
     this.props.router.navigate("/home/post-details/" + id);
   };
+
   render() {
     const { post } = this.props;
     const { comments, like } = this.state;
     return (
       <div className="post-card">
         <div className="post-card__header">
-          <div>
-            <h3 className="post-card__title">
-              <Avatar
-                size={64}
-                src={PostService.getImage(post.authorId.profile.avatar)}
-              />
-              {post.authorId.profile.name}
-            </h3>
-          </div>
+          <h3 className="post-card__title">
+            <Avatar size={64} src={post.authorId.profile.avatar} />
+            {post.authorId.profile.name}
+          </h3>
         </div>
         <p className="post-card__content">{post.content}</p>
 
-        {/* Hiển thị ảnh với Carousel */}
-        <div onClick={() => this.seeDetails(post._id)}>
-          <Carousel
-            autoplay
-            autoplaySpeed={5000}
-            className="post-card__carousel"
+        <div
+          onClick={() => this.seeDetails(post._id)}
+          className="post-card__images"
+        >
+          <div
+            className={`post-card__images ${
+              post.images.length === 1
+                ? "one"
+                : post.images.length === 2
+                ? "two"
+                : post.images.length === 3
+                ? "three"
+                : post.images.length === 4
+                ? "four"
+                : "more"
+            }`}
           >
-            {post.images.map((image, index) => (
-              <img
-                key={index}
-                src={PostService.getImage(image)}
-                alt={`Post Image ${index + 1}`}
-                className="post-card__image"
-              />
+            {post.images.slice(0, 4).map((img, index) => (
+              <img key={index} src={img} alt={`Image ${index + 1}`} />
             ))}
-          </Carousel>
+            {post.images.length > 4 && (
+              <div className="overlay">+{post.images.length - 4}</div>
+            )}
+          </div>
         </div>
 
         <div className="post-card__footer">
@@ -128,15 +128,13 @@ class PostCard extends Component {
             </Button>
           </div>
           <div className="post-card__footer--item">
-            <span> {comments?.length}</span>{" "}
+            <span>{comments?.length}</span>
             <Button className="post-card__footer--btn" icon={<FaRegComment />}>
               Bình luận
             </Button>
           </div>
           <div className="post-card__footer--item">Chia sẻ</div>
         </div>
-
-        {/* Hiển thị các bình luận */}
         {comments.length > 0 && (
           <div className="post-card__comments">
             {comments.slice(0, 3).map((comment, index) => {

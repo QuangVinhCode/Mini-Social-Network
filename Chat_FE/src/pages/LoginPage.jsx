@@ -9,12 +9,16 @@ import { Link } from "react-router";
 class LoginPage extends Component {
   onFinish = async (values) => {
     const login = await this.props.loginUser(values);
-
+    console.log("login", login);
     if (login) {
       this.props.socket
         .emit("register", login.id)
         .emit("user_online", login.id);
-      this.props.router.navigate("/");
+      if (login.role === "admin") {
+        this.props.router.navigate("/dashboard");
+      } else {
+        this.props.router.navigate("/");
+      }
     }
   };
   onFinishFailed = (errorInfo) => {
@@ -30,6 +34,7 @@ class LoginPage extends Component {
           <h2 className="login-title">Đăng nhập</h2>
           <Form
             name="login"
+            layout="vertical" // Chuyển layout form về dọc
             initialValues={{ remember: true }}
             onFinish={this.onFinish}
             onFinishFailed={this.onFinishFailed}
@@ -52,13 +57,19 @@ class LoginPage extends Component {
             >
               <Input.Password placeholder="Nhập mật khẩu" />
             </Form.Item>
+
             <Form.Item>
               <Button type="primary" htmlType="submit" block>
                 Đăng nhập
               </Button>
             </Form.Item>
           </Form>
-          <Link to="/register">Đăng ký</Link>
+          <Link to="/home/register" className="login__action">
+            Đăng ký
+          </Link>
+          <Link to="/home" className="login__action">
+            Quay lại
+          </Link>
         </div>
       </div>
     );

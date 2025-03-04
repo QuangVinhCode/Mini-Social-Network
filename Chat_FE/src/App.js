@@ -4,7 +4,7 @@ import store from "./redux/store";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import { SocketProvider } from "./helpers/SocketContext.js";
-import RegisterPage from "./pages/RegisterPage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 function App() {
   return (
     <SocketProvider>
@@ -13,8 +13,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home/*" element={<HomePage />} />
+            <Route path="/dashboard/*" element={<AdminPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </BrowserRouter>
       </Provider>

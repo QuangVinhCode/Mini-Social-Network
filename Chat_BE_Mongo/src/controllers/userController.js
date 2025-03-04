@@ -47,7 +47,7 @@ export const updateUserHandler = async (req, res) => {
   try {
     const updateData = { ...req.body };
     if (req.files && req.files.length > 0) {
-      const imagePaths = req.files.map((file) => file.filename);
+      const imagePaths = req.files.map((file) => file.path);
       updateData["profile.avatar"] = imagePaths.join(",");
     }
     console.log(updateData);
@@ -78,10 +78,11 @@ export const loginUserHandler = async (req, res) => {
   try {
     const { username, password } = req.body;
     const { user, token } = await loginUser(username, password);
-    addToken(user._id, token);
+    addToken(user._id.toString(), token);
     return res.status(200).json({
       id: user._id,
       username: user.username,
+      role: user.role,
       token,
     });
   } catch (error) {
@@ -167,7 +168,6 @@ export const declineFriendRequestHandler = async (req, res, io) => {
       source: requesterId,
     };
     const notification = await createNotification(data);
-    console.log(getSocketByUserId(requesterId));
     io.to(getSocketByUserId(requesterId)).emit("declineFriendRequest", user);
     io.to(getSocketByUserId(requesterId)).emit("newNotification", notification);
     return res.status(200).json({ friend });

@@ -18,7 +18,7 @@ const CommentChild = ({
     <div className="comment-box">
       <div className="comment-header">
         <img
-          src={PostService.getImage(comment.userId.profile.avatar)}
+          src={comment.userId.profile.avatar}
           alt="avatar"
           className="avatar"
         />

@@ -5,7 +5,6 @@ import {
   USER_SET,
   USER_STATE_CLEAR,
   COMMON_ERROR_SET,
-  COMMON_LOADING_SET,
   COMMON_MESSAGE_SET,
 } from "./actionTypes";
 
@@ -71,7 +70,7 @@ export const loginUser = (object) => async (dispatch) => {
   }
 };
 
-export const registerUser = (object) => async (dispatch) => {
+export const registerUser = (object, navigate) => async (dispatch) => {
   const service = new UserService();
 
   try {
@@ -83,6 +82,7 @@ export const registerUser = (object) => async (dispatch) => {
         type: COMMON_MESSAGE_SET,
         payload: "Đăng ký thành công",
       });
+      navigate("/login");
     } else {
       dispatch({
         type: COMMON_ERROR_SET,
@@ -166,7 +166,7 @@ export const deleteUser = (id) => async (dispatch) => {
       });
       dispatch({
         type: COMMON_MESSAGE_SET,
-        payload: response.data,
+        payload: response.data.message,
       });
     } else {
       dispatch({

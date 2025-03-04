@@ -233,7 +233,7 @@ class FriendList extends Component {
                     <div className="friend__avatar">
                       <Avatar
                         size={54}
-                        src={PostService.getImage(friend.profile.avatar)}
+                        src={friend.profile.avatar}
                         key={index}
                       />
                     </div>
@@ -300,7 +300,7 @@ class FriendList extends Component {
                       <div className="friend__avatar">
                         <Avatar
                           size={54}
-                          src={PostService.getImage(friend.profile.avatar)}
+                          src={friend.profile.avatar}
                         />
                       </div>
                       <div className="friend__title">
@@ -350,7 +350,7 @@ class FriendList extends Component {
                         <div className="friend__avatar">
                           <Avatar
                             size={54}
-                            src={PostService.getImage(friend.profile.avatar)}
+                            src={friend.profile.avatar}
                           />
                         </div>
                         <div className="friend__title">
@@ -395,7 +395,7 @@ class FriendList extends Component {
                   <div className="friend__item--avatar">
                     <Avatar
                       size={54}
-                      src={PostService.getImage(friend.profile.avatar)}
+                      src={friend.profile.avatar}
                     />
                   </div>
                   <div className="friend__item--title">

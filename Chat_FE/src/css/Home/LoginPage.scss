@@ -7,12 +7,12 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
   .login-form-wrapper {
-    background: #ffffff; // Màu nền trắng
-    border-radius: 10px; // Bo góc container
+    background: #ffffff; 
+    border-radius: 10px;
     padding: 40px;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Đổ bóng nhẹ
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     animation: slideIn 0.5s ease-in-out;
 
     @keyframes slideIn {
@@ -40,7 +40,7 @@
         align-items: center;
 
         .ant-form-item-label {
-          width: 120px; // Đảm bảo label có cùng độ rộng
+          width: 120px; 
           text-align: left;
         }
 
@@ -48,26 +48,75 @@
           flex: 1;
 
           .ant-input {
-            height: 40px; // Chiều cao cố định
-            border-radius: 8px; // Bo tròn góc
+            height: 40px; 
+            border-radius: 8px; 
+            min-width: 30px;
           }
           .ant-input-password {
-            height: 40px; // Chiều cao cố định
-            border-radius: 8px; // Bo tròn góc
+            height: 40px;
+            border-radius: 8px; 
           }
 
           .ant-input-affix-wrapper {
-            height: 40px; // Chiều cao cho ô mật khẩu (có icon)
+            height: 40px; 
             border-radius: 8px;
           }
         }
         .ant-btn-primary {
-          background-color: #4caf50; /* Đổi màu nền */
-          border-color: #4caf50; /* Đổi màu viền */
-          margin: 0 auto; /* Căn giữa theo chiều ngang */
-          text-align: center; /* Căn giữa nội dung bên trong nút */
+          background-color: #4caf50; 
+          border-color: #4caf50; 
+          margin: 0 auto; 
+          text-align: center;
+        }
+      }
+    }
+  }
+  .login__action{
+    padding: 0px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px;
+
+    .login-form-wrapper {
+      max-width: 350px;
+      padding: 20px;
+
+      .login-title {
+        font-size: 20px;
+      }
+
+      .login-form {
+        .ant-form-item {
+          flex-direction: column; // Chuyển về dạng cột trên mobile
+          text-align: left;
+
+          .ant-form-item-label {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+          }
+
+          .ant-form-item-control {
+            width: 100%;
+          }
+
+          .ant-input,
+          .ant-input-password,
+          .ant-input-affix-wrapper {
+            height: 38px;
+            font-size: 14px;
+            width: 100%; // Đảm bảo input chiếm toàn bộ chiều ngang
+          }
+        }
+
+        .ant-btn-primary {
+          font-size: 14px;
         }
       }
     }
   }
 }
+

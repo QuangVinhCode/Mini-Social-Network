@@ -75,10 +75,7 @@ class PostDetails extends Component {
         <div className="post__content">
           <ul>
             <l1>
-              <Avatar
-                size={54}
-                src={PostService.getImage(post.authorId.profile.avatar)}
-              />
+              <Avatar size={54} src={post.authorId.profile.avatar} />
               &nbsp;
               <strong>{post.authorId.profile.name}</strong>
             </l1>
@@ -89,7 +86,7 @@ class PostDetails extends Component {
           </ul>
           <div className="post__footer">
             <div className="post__footer--item">
-             <span> {post.likes.length} lượt</span>
+              <span> {post.likes.length} lượt</span>
               <Button
                 className={`post__footer--btn ${like ? "checkLike" : ""}`}
                 icon={<AiOutlineLike />}

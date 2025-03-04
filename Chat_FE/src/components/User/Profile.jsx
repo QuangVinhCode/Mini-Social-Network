@@ -46,7 +46,7 @@ class Profile extends Component {
     const { user } = this.props;
     const { open } = this.state;
     const img = user.profile?.avatar
-      ? PostService.getImageDetails(user.profile?.avatar)
+      ? user.profile?.avatar
       : null;
     return (
       <>

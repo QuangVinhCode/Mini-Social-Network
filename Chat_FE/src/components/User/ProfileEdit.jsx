@@ -41,7 +41,7 @@ class ProfileEdit extends Component {
 
   render() {
     const { open, onCancel, user, onEdit } = this.props;
-    const url = user ? PostService.getImageDetails(user.profile.avatar) : "";
+    const url = user ? user.profile.avatar : "";
     const initialImage = {
       url: url,
       uid: user.profile.avatar,

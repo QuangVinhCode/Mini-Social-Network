@@ -167,7 +167,7 @@ class MessagePage extends Component {
                 <div className="avatar">
                   <Avatar
                     size={50}
-                    src={PostService.getImage(chat.withUser.avatar)}
+                    src={chat.withUser.avatar}
                     alt="Avatar"
                   />
                 </div>

@@ -11,6 +11,7 @@ import Profile from "../components/User/Profile.jsx";
 import { connect } from "react-redux";
 import PostForm from "../components/Post/PostForm.jsx";
 import { insertPost } from "../redux/actions/postAction.jsx";
+import RegisterPage from "./RegisterPage.jsx";
 
 class HomePage extends Component {
   state = {
@@ -39,7 +40,7 @@ class HomePage extends Component {
   render() {
     const { open, post } = this.state;
     return (
-      <>
+      <div className="container">
         <Header onOpen={this.onOpen} />
         <div className="container__chat">
           <Layout>
@@ -49,6 +50,7 @@ class HomePage extends Component {
               <Route path="/message/:id" element={<MessagePage />} />
               <Route path="/message" element={<MessagePage />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/register" element={<RegisterPage />} />
             </Routes>
           </Layout>
         </div>
@@ -59,7 +61,7 @@ class HomePage extends Component {
           post={post}
           onExecute={this.onExecute}
         />
-      </>
+      </div>
     );
   }
 }

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import withRouter from "../../helpers/withRouter.js";
 import "../../css/Home/Header.scss";
 import logo from "../../logo.png";
-import { FaMessage } from "react-icons/fa6";
+import { FaBars, FaMessage } from "react-icons/fa6";
 import { IoIosAddCircle, IoMdNotifications } from "react-icons/io";
 import { CiLogin } from "react-icons/ci";
 import { Link } from "react-router";
@@ -12,10 +12,12 @@ import NotificationList from "../Notification/NotificationList.js";
 import { countUnreadNotifications } from "../../redux/actions/notificationAction.jsx";
 import { getUser } from "../../redux/actions/userAction.jsx";
 import PostService from "../../services/postService.jsx";
+import { FaTimes } from "react-icons/fa";
 const { Search } = Input;
 class Header extends Component {
   state = {
-    isNotificationVisible: false, // Trạng thái thông báo
+    isNotificationVisible: false,
+    menu: false,
     countNotification: 0,
   };
 
@@ -78,9 +80,9 @@ class Header extends Component {
       : null;
     const { user } = this.props;
     const img = user.profile?.avatar
-      ? PostService.getImageDetails(user.profile?.avatar)
+      ? user.profile?.avatar
       : null;
-    const { countNotification, isNotificationVisible } = this.state;
+    const { menu, countNotification, isNotificationVisible } = this.state;
     return (
       <div className="header__container">
         <div className="header__logo">
@@ -88,61 +90,75 @@ class Header extends Component {
             <Link to="/">
               <Avatar className="avatar-custom" size={60} src={logo} />
             </Link>
+            <div
+              className="hamburger"
+              onClick={() => this.setState({ menu: !menu })}
+            >
+              {menu ? <FaTimes /> : <FaBars />}
+            </div>
           </div>
-          <div className="header__logo--item">
-            <Search className="header__logo--search" placeholder="Tìm kiếm..." />
+          <div className="header__logo--item header__search">
+            <Search
+              className="header__logo--search"
+              placeholder="Tìm kiếm..."
+            />
           </div>
         </div>
-        <div className="header__item">
-            {userSession ? (
-              <>
-                <div className="header__list--item">
-                  <Tooltip
-                    title="Đăng bài viết"
-                    onClick={() => this.props.onOpen()}
-                  >
-                    <div className="header__badge">
-                      <IoIosAddCircle />
-                    </div>
-                  </Tooltip>
-                </div>
-                <div className="header__list--item">
-                  <Tooltip title="Tin nhắn">
-                    <Link to="/home/message">
-                      <FaMessage />
-                    </Link>
-                  </Tooltip>
-                </div>
-                <div className="header__list--item ">
-                  <Tooltip title="Thông báo">
-                    <div className="header__badge">
-                      <Badge count={countNotification}>
-                        <IoMdNotifications onClick={this.toggleNotifications} />
-                      </Badge>
-                    </div>
-                  </Tooltip>
-                </div>
-                <div className="header__list--item">
-                  <Tooltip title={user?.profile?.name}>
-                    <Link to="/home/profile">
-                      <Avatar size={54} src={img} /> {user?.profile?.name}
-                    </Link>
-                  </Tooltip>
+        <div className={`header__item ${menu ? "active" : ""}`}>
+          {userSession ? (
+            <>
+              <div className="header__list--item">
+                <Tooltip
+                  title="Đăng bài viết"
+                  onClick={() => this.props.onOpen()}
+                >
+                  <div className="header__badge">
+                    <IoIosAddCircle />
+                    <span className="header__text">Đăng bài viết</span>
+                  </div>
+                </Tooltip>
+              </div>
+              <div className="header__list--item">
+                <Tooltip title="Tin nhắn">
+                  <Link to="/home/message">
+                    <FaMessage />
+                    <span className="header__text">Tin nhắn</span>
+                  </Link>
+                </Tooltip>
+              </div>
+              <div className="header__list--item ">
+                <Tooltip title="Thông báo">
+                  <div className="header__badge">
+                    <Badge count={countNotification}>
+                      <IoMdNotifications onClick={this.toggleNotifications} />
+                    </Badge>
+                    <span className="header__text">Thông báo</span>
+                  </div>
+                </Tooltip>
+              </div>
+              <div className="header__list--item">
+                <Tooltip title={user?.profile?.name}>
+                  <Link to="/home/profile">
+                    <Avatar size={54} src={img} /> {user?.profile?.name}
+                  </Link>
+                </Tooltip>
+                <div className="header__btn_container">
                   <button className="header__btn" onClick={this.logoutUser}>
                     Đăng xuất
                   </button>
                 </div>
-              </>
-            ) : (
-              <div className="header__list--item">
-                <Tooltip title="Đăng nhập">
-                  <Link to="/login">
-                    Đăng nhập <CiLogin />
-                  </Link>
-                </Tooltip>
               </div>
-            )}
-         
+            </>
+          ) : (
+            <div className="header__list--item">
+              <Tooltip title="Đăng nhập">
+                <Link to="/login">
+                  Đăng nhập <CiLogin />
+                </Link>
+              </Tooltip>
+            </div>
+          )}
+
           {/* Chỉ hiển thị NotificationList khi trạng thái isNotificationVisible là true */}
           {isNotificationVisible && (
             <div ref={(node) => (this.notificationRef = node)}>

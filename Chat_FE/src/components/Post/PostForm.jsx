@@ -1,27 +1,38 @@
 import { Button, Form, Input, Modal, Upload } from "antd";
 import React, { Component, createRef } from "react";
 import { UploadOutlined } from "@ant-design/icons";
-import PostService from "../../services/postService";
+
 class PostForm extends Component {
   form = createRef();
 
   state = {
-    fileList: [], // Danh sách file hình ảnh
+    fileList: [],
   };
 
   componentDidMount() {
-    const { post } = this.props;
-    if (post && post.images) {
-      // Chuyển đổi `images` từ post thành `fileList`
-      const fileList = post.images.map((img, index) => ({
-        uid: `-${index}`, // Tạo UID duy nhất
-        name: img,
-        status: "done",
-        url: PostService.getImage(img), // Lấy URL từ dịch vụ
-      }));
-      this.setState({ fileList });
+    this.loadInitialData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.post !== this.props.post) {
+      this.loadInitialData();
     }
   }
+
+  loadInitialData = () => {
+    const { post } = this.props;
+    if (post && post.images) {
+      const fileList = post.images.map((img, index) => ({
+        uid: `-${index}`,
+        name: img,
+        status: "done",
+        url: img,
+      }));
+      this.setState({ fileList });
+    } else {
+      this.setState({ fileList: [] });
+    }
+  };
 
   handlePreview = (file) => {
     window.open(file.url || file.thumbUrl, "_blank");
@@ -31,39 +42,44 @@ class PostForm extends Component {
     this.setState({ fileList });
   };
 
+  handleCancel = () => {
+    if (this.form.current) {
+      this.form.current.resetFields();
+    }
+    this.setState({ fileList: [] }); // Xóa trắng danh sách tệp
+    this.props.onCancel();
+  };
+
+  handleOk = () => {
+    this.form.current
+      .validateFields()
+      .then((values) => {
+        this.form.current.resetFields();
+        this.setState({ fileList: [] }); // Xóa trắng danh sách tệp
+
+        console.log("-------object in values form--------");
+        console.log(values);
+        this.props.onExecute(values);
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+      });
+  };
+
   render() {
-    const { open, onCancel, onExecute, post } = this.props;
+    const { open, post } = this.props;
     const { fileList } = this.state;
-    const userSession = sessionStorage.getItem("userSession")
-      ? JSON.parse(sessionStorage.getItem("userSession"))
-      : null;
+
     return (
       <Modal
         open={open}
         title={post._id ? "Cập nhật bài viết" : "Đăng bài viết"}
         okText="Xác nhận"
         cancelText="Hủy"
-        onCancel={() => {
-          this.form.current.resetFields();
-          onCancel();
-        }}
-        onOk={() => {
-          this.form.current
-            .validateFields()
-            .then((values) => {
-              this.form.current.resetFields();
-
-              console.log("-------object in values form--------");
-              console.log(values);
-              onExecute(values);
-            })
-            .catch((info) => {
-              console.log("Validate Failed:", info);
-            });
-        }}
+        onCancel={this.handleCancel}
+        onOk={this.handleOk}
       >
         <Form ref={this.form} layout="vertical">
-         
           <Form.Item
             label="Nội dung"
             name="content"
@@ -80,7 +96,7 @@ class PostForm extends Component {
               onPreview={this.handlePreview}
               onChange={this.handleChange}
               accept="image/*"
-              beforeUpload={() => false} // Ngăn tải lên ngay lập tức
+              beforeUpload={() => false}
             >
               <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
             </Upload>

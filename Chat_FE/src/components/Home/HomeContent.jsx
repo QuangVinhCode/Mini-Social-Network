@@ -37,13 +37,17 @@ class HomeContent extends Component {
     return (
       <div className="home__container">
         <div className="home__list">
-          {posts.map((post) => (
-            <PostCard
-              key={post._id}
-              post={post}
-              handleLikePost={this.handleLikePost}
-            />
-          ))}
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <PostCard
+                key={post._id}
+                post={post}
+                handleLikePost={this.handleLikePost}
+              />
+            ))
+          ) : (
+            <p>Chưa đăng bài viết</p>
+          )}
         </div>
       </div>
     );

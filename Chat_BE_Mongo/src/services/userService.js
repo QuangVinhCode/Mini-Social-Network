@@ -1,62 +1,57 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+// Mã hóa mật khẩu
 const hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Generate salt và hash mật khẩu
-      const salt = await bcrypt.genSalt(10); // Sử dụng genSalt để tạo salt
-      let hashPassWord = await bcrypt.hash(password, salt); // Hash password với salt
+      const salt = await bcrypt.genSalt(10);
+      let hashPassWord = await bcrypt.hash(password, salt);
       resolve(hashPassWord);
     } catch (e) {
       reject(e);
     }
   });
 };
-
+//Tạo tài khoản
 export const createUser = async (userData) => {
   userData.password = await hashUserPassword(userData.password);
   const user = new User(userData);
   return await user.save();
 };
-
+//Lấy thông tin tài khoản
 export const getUserById = async (id) => {
   return await User.findById(id)
     .populate("friends", "_id profile.name profile.avatar")
     .populate("friendRequests", "_id profile.name profile.avatar")
     .populate("friendRequestsSent", "_id profile.name profile.avatar");
 };
-
+//Lấy danh sách user
 export const getAllUsers = async () => {
   return await User.find({});
 };
-
+//Cập nhật user
 export const updateUser = async (id, updatedData) => {
   return await User.findByIdAndUpdate(id, updatedData, { new: true });
 };
-
+//Xóa tài khoản
 export const deleteUser = async (id) => {
   return await User.findByIdAndDelete(id);
 };
 
 export const loginUser = async (username, password) => {
-  // Tìm người dùng theo email
   const user = await User.findOne({ username });
   if (!user) {
     throw new Error("Username hoặc mật khẩu không chính xác.");
   }
-
-  // So sánh mật khẩu
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error("Username hoặc mật khẩu không chính xác.");
   }
-  // Tạo token JWT
   const token = jwt.sign(
-    { userId: user._id, username: user.username }, // Payload
-    process.env.JWT_SECRET, // Secret key từ .env
-    { expiresIn: process.env.JWT_EXPIRES } // Token hết hạn sau JWT_EXPIRES
+    { userId: user._id, username: user.username},
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES }
   );
   return { user, token };
 };
