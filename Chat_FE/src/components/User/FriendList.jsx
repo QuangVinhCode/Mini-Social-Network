@@ -1,6 +1,5 @@
 import { Tabs, Input, Button, Card, Avatar, Divider, Modal } from "antd";
 import React, { Component } from "react";
-import PostService from "../../services/postService";
 import "../../css/User/FriendList.scss";
 import UserService from "../../services/userService";
 import withSocket from "../../helpers/withSocket";
@@ -22,10 +21,23 @@ class FriendList extends Component {
   }
 
   componentDidMount() {
-    const { friends, friendRequests, friendRequestsSent } = this.props;
-    this.setState({ friends, friendRequests, friendRequestsSent });
     this.initializeSocket();
+    this.initializeFriend();
   }
+
+  initializeFriend = async () => {
+    const { id } = this.props;
+    const friends = await this.userService.getFriendsList(id);
+    const friendRequests = await this.userService.getFriendRequestsList(id);
+    const friendRequestsSent = await this.userService.getFriendRequestsSentList(
+      id
+    );
+    this.setState({
+      friends: friends.data,
+      friendRequests: friendRequests.data,
+      friendRequestsSent: friendRequestsSent.data,
+    });
+  };
   initializeSocket = () => {
     const { socket } = this.props;
 
@@ -33,9 +45,10 @@ class FriendList extends Component {
       console.error("Socket is not initialized.");
       return;
     }
-
     socket
+      .emit("online_status")
       .on("cancelFriendRequest", (friend) => {
+        if (!friend || !friend._id) return; // Kiểm tra dữ liệu hợp lệ
         this.setState((prevState) => ({
           friendRequests: prevState.friendRequests.filter(
             (item) => item._id !== friend._id
@@ -43,14 +56,18 @@ class FriendList extends Component {
         }));
       })
       .on("acceptFriendRequest", (friend) => {
+        if (!friend || !friend._id) return; // Kiểm tra dữ liệu hợp lệ
         this.setState((prevState) => ({
-          friends: [...prevState.friends, friend],
+          friends: prevState.friends.some((f) => f._id === friend._id)
+            ? prevState.friends
+            : [...prevState.friends, friend], // Tránh thêm trùng bạn bè
           friendRequestsSent: prevState.friendRequestsSent.filter(
             (item) => item._id !== friend._id
           ),
         }));
       })
       .on("declineFriendRequest", (friend) => {
+        if (!friend || !friend._id) return; // Kiểm tra dữ liệu hợp lệ
         this.setState((prevState) => ({
           friendRequestsSent: prevState.friendRequestsSent.filter(
             (item) => item._id !== friend._id
@@ -58,6 +75,8 @@ class FriendList extends Component {
         }));
       })
       .on("online_status_update", (usersOnline) => {
+        if (!usersOnline) return; // Kiểm tra dữ liệu hợp lệ
+        console.log("usersOnline", usersOnline);
         this.setState({ usersOnline });
       });
   };
@@ -77,6 +96,9 @@ class FriendList extends Component {
   };
 
   filterListByName = (list) => {
+    if (!list || !Array.isArray(list)) {
+      return []; // Trả về mảng rỗng nếu list không hợp lệ
+    }
     const { searchQuery, usersOnline } = this.state;
 
     // Sort the list by online status (online first)
@@ -207,7 +229,6 @@ class FriendList extends Component {
       usersOnline,
       open,
     } = this.state;
-
     const items = [
       {
         label: "Danh sách bạn bè",
@@ -228,32 +249,36 @@ class FriendList extends Component {
             />
             <div className="friend__container">
               {this.filterListByName(friends).length > 0 ? (
-                this.filterListByName(friends).map((friend, index) => (
-                  <div className="friend__content">
-                    <div className="friend__avatar">
+                this.filterListByName(friends).map((friend, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                    >
                       <Avatar
                         size={54}
-                        src={friend.profile.avatar}
-                        key={index}
+                        src={friend?.profile?.avatar}
+                        className="mr-4"
                       />
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800">
+                          {friend?.profile.name}
+                        </p>
+                      </div>
+                      <div>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            usersOnline[friend._id]
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-500"
+                          }`}
+                        >
+                          {usersOnline[friend._id] ? "Online" : "Offline"}
+                        </span>
+                      </div>
                     </div>
-                    <div className="friend__title">
-                      <p>
-                        <b>{friend.profile.name}</b>
-                      </p>
-                    </div>
-                    <div className="friend__status">               
-                      <span
-                        style={{
-                          color: usersOnline[friend._id] ? "green" : "gray",
-                          margin: 10,
-                        }}
-                      >
-                        {usersOnline[friend._id] ? "Online" : "Offline"}
-                      </span>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p>Không tìm thấy bạn bè nào.</p>
               )}
@@ -298,14 +323,11 @@ class FriendList extends Component {
                   >
                     <div className="friend__content">
                       <div className="friend__avatar">
-                        <Avatar
-                          size={54}
-                          src={friend.profile.avatar}
-                        />
+                        <Avatar size={54} src={friend?.profile?.avatar} />
                       </div>
                       <div className="friend__title">
                         <p>
-                          <b>{friend.profile.name}</b>
+                          <b>{friend?.profile?.name}</b>
                         </p>
                       </div>
                     </div>
@@ -348,14 +370,11 @@ class FriendList extends Component {
                     >
                       <div className="friend__content">
                         <div className="friend__avatar">
-                          <Avatar
-                            size={54}
-                            src={friend.profile.avatar}
-                          />
+                          <Avatar size={54} src={friend?.profile?.avatar} />
                         </div>
                         <div className="friend__title">
                           <p>
-                            <b>{friend.profile.name}</b>
+                            <b>{friend?.profile?.name}</b>
                           </p>
                         </div>
                       </div>
@@ -393,14 +412,11 @@ class FriendList extends Component {
               friendSearchList.map((friend, index) => (
                 <div className="friend__item">
                   <div className="friend__item--avatar">
-                    <Avatar
-                      size={54}
-                      src={friend.profile.avatar}
-                    />
+                    <Avatar size={54} src={friend?.profile?.avatar} />
                   </div>
                   <div className="friend__item--title">
                     <p>
-                      <b>{friend.profile.name}</b>
+                      <b>{friend?.profile?.name}</b>
                     </p>
                   </div>
                   <div className="friend__item--btn">

@@ -5,7 +5,6 @@ import "../../css/User/Profile.scss";
 import { connect } from "react-redux";
 import { getUser, updateUser } from "../../redux/actions/userAction";
 import withRouter from "../../helpers/withRouter.js";
-import PostService from "../../services/postService.jsx";
 import ProfileEdit from "./ProfileEdit.jsx";
 import FriendList from "./FriendList.jsx";
 const { Title, Text } = Typography;
@@ -45,9 +44,7 @@ class Profile extends Component {
       : null;
     const { user } = this.props;
     const { open } = this.state;
-    const img = user.profile?.avatar
-      ? user.profile?.avatar
-      : null;
+    const img = user.profile?.avatar ? user.profile?.avatar : null;
     return (
       <>
         <div className="profile__container">
@@ -93,12 +90,7 @@ class Profile extends Component {
             </Card>
           </div>
           <div className="profile__friendly">
-            <FriendList
-              id={userSession.id}
-              friends={user.friends}
-              friendRequests={user.friendRequests}
-              friendRequestsSent={user.friendRequestsSent}
-            />
+            <FriendList id={userSession.id} />
           </div>
         </div>
         {open && (

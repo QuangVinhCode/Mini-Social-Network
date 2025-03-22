@@ -43,7 +43,7 @@
     display: grid;
     gap: 4px;
     position: relative;
-
+    cursor: pointer;
     img {
       width: 100%;
       max-height: 350px; /* Giới hạn chiều cao tối đa */
@@ -158,5 +158,11 @@
     .ant-input {
       flex: 1;
     }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .post-card {
+    width: 100%;
   }
 }

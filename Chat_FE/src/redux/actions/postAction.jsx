@@ -144,12 +144,6 @@ export const getPost = (id) => async (dispatch) => {
     }
   } catch (error) {
     console.log(error);
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
   }
 };
 

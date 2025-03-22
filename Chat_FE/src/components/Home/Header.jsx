@@ -6,13 +6,12 @@ import "../../css/Home/Header.scss";
 import logo from "../../logo.png";
 import { FaBars, FaMessage } from "react-icons/fa6";
 import { IoIosAddCircle, IoMdNotifications } from "react-icons/io";
-import { CiLogin } from "react-icons/ci";
 import { Link } from "react-router";
 import NotificationList from "../Notification/NotificationList.js";
 import { countUnreadNotifications } from "../../redux/actions/notificationAction.jsx";
 import { getUser } from "../../redux/actions/userAction.jsx";
-import PostService from "../../services/postService.jsx";
 import { FaTimes } from "react-icons/fa";
+import UserService from "../../services/userService.jsx";
 const { Search } = Input;
 class Header extends Component {
   state = {
@@ -20,6 +19,7 @@ class Header extends Component {
     menu: false,
     countNotification: 0,
   };
+  userService = new UserService();
 
   toggleNotifications = () => {
     this.setState({ isNotificationVisible: !this.state.isNotificationVisible });
@@ -41,6 +41,7 @@ class Header extends Component {
 
     // Xóa userSession khỏi sessionStorage nếu nó tồn tại
     if (userSession) {
+      this.userService.logoutUser(userSession.id);
       sessionStorage.removeItem("userSession");
       console.log("User session has been removed");
       this.props.router.navigate("/");
@@ -70,7 +71,6 @@ class Header extends Component {
   };
 
   componentWillUnmount() {
-    // Xóa sự kiện khi component bị hủy
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
@@ -79,9 +79,7 @@ class Header extends Component {
       ? JSON.parse(sessionStorage.getItem("userSession"))
       : null;
     const { user } = this.props;
-    const img = user.profile?.avatar
-      ? user.profile?.avatar
-      : null;
+    const img = user.profile?.avatar ? user.profile?.avatar : null;
     const { menu, countNotification, isNotificationVisible } = this.state;
     return (
       <div className="header__container">
@@ -121,8 +119,10 @@ class Header extends Component {
               <div className="header__list--item">
                 <Tooltip title="Tin nhắn">
                   <Link to="/home/message">
-                    <FaMessage />
-                    <span className="header__text">Tin nhắn</span>
+                    <div className="header__badge">
+                      <FaMessage />
+                      <span className="header__text">Tin nhắn</span>
+                    </div>
                   </Link>
                 </Tooltip>
               </div>
@@ -152,8 +152,14 @@ class Header extends Component {
           ) : (
             <div className="header__list--item">
               <Tooltip title="Đăng nhập">
-                <Link to="/login">
-                  Đăng nhập <CiLogin />
+                <Link
+                  to="/login"
+                  className="px-6 py-2 mb-1 bg-gradient-to-r from-blue-500 to-purple-500 
+             text-white font-semibold rounded-full shadow-md 
+             hover:from-blue-600 hover:to-purple-600 transition-all 
+             duration-300 ease-in-out transform hover:scale-105"
+                >
+                  Đăng nhập
                 </Link>
               </Tooltip>
             </div>

@@ -54,12 +54,7 @@ export const getMessages = (userId1, userId2) => async (dispatch) => {
       });
     }
   } catch (error) {
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
+    console.log(error);
   }
 };
 

@@ -9,6 +9,7 @@ import {
   replyToComment,
 } from "../../redux/actions/commentAction";
 import CommentChild from "../Comment/CommentChild";
+import { setError } from "../../redux/actions/commonAction";
 
 const { TextArea } = Input;
 
@@ -43,7 +44,7 @@ class CommentList extends Component {
       ? JSON.parse(sessionStorage.getItem("userSession"))
       : null;
     if (!newComment.trim()) return;
-    try {
+    if (userSession) {
       const comment = await this.props.insertComment({
         content: newComment,
         userId: userSession.id,
@@ -54,8 +55,8 @@ class CommentList extends Component {
         comments: [...comments, { ...comment, replies: [], replyTo: null }],
         newComment: "",
       });
-    } catch (error) {
-      console.error("Error posting comment", error);
+    } else {
+      this.props.router.dispatch(setError("Yêu cầu đăng nhập"));
     }
   };
 
@@ -139,7 +140,7 @@ class CommentList extends Component {
     return (
       <div className="post-comment__list">
         <div className="post-comment__box">
-          {comments.map((comment) => (
+          {comments > 0 ? (comments.map((comment) => (
             <CommentChild
               key={comment._id}
               comment={comment}
@@ -148,7 +149,7 @@ class CommentList extends Component {
               replyComment={replyComment}
               handlePostReply={this.handlePostReply}
             />
-          ))}
+          ))) : (<p>Chưa có bình luận</p>)}
         </div>
 
         <div className="post-comment__add">

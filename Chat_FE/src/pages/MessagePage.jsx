@@ -14,8 +14,8 @@ import moment from "moment";
 import { FaCheck } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { Avatar, Button, Input } from "antd";
-import PostService from "../services/postService";
 import { SendOutlined } from "@ant-design/icons";
+import { IoMdSearch } from "react-icons/io";
 class MessagePage extends Component {
   state = {
     chatList: [],
@@ -31,20 +31,22 @@ class MessagePage extends Component {
     const userSession = sessionStorage.getItem("userSession")
       ? JSON.parse(sessionStorage.getItem("userSession"))
       : null;
-    const data = await this.props.getMessages(userSession.id, received);
-    const updatedMessages = await Promise.all(
-      data.map(async (item) => {
-        if (!item.isRead && item.receiverId === userSession.id) {
-          // Mark the message as read
-          await this.messageService.markMessage(item._id);
-          this.props.socket.emit("messageRead", item);
-          return { ...item, isRead: true }; // Update the message locally
-        }
-        return item;
-      })
-    );
-
-    this.setState({ messages: updatedMessages, received });
+    if (received) {
+      const data =
+        (await this.props.getMessages(userSession.id, received)) || [];
+      const updatedMessages = await Promise.all(
+        data.map(async (item) => {
+          if (!item.isRead && item.receiverId === userSession.id) {
+            // Mark the message as read
+            await this.messageService.markMessage(item._id);
+            this.props.socket.emit("messageRead", item);
+            return { ...item, isRead: true }; // Update the message locally
+          }
+          return item;
+        })
+      );
+      this.setState({ messages: updatedMessages, received });
+    }
   };
 
   handleMessageChange = (event) => {
@@ -86,28 +88,30 @@ class MessagePage extends Component {
     }
   }
   initializeSocket = () => {
-    this.props.socket
-      .off("newMessage")
-      .off("messageRead")
-      .on("newMessage", async (message) => {
-        // Add the received message to the current conversation
-        console.log("newMessage ", message);
-        await this.messageService.markMessage(message._id);
-        this.props.socket.emit("messageRead", message);
-        this.setState((prevState) => ({
-          messages: [...prevState.messages, { ...message, isRead: true }],
-          openBtn: true,
-        }));
-      })
-      .on("messageRead", (messageId) => {
-        // Cập nhật trạng thái isRead của tin nhắn
-        console.log("messageRead ", messageId);
-        this.setState((prevState) => ({
-          messages: prevState.messages.map((msg) =>
-            msg._id === messageId ? { ...msg, isRead: true } : msg
-          ),
-        }));
-      });
+    if (this.props.socket) {
+      this.props.socket
+        .off("newMessage")
+        .off("messageRead")
+        .on("newMessage", async (message) => {
+          // Add the received message to the current conversation
+          console.log("newMessage ", message);
+          await this.messageService.markMessage(message._id);
+          this.props.socket.emit("messageRead", message);
+          this.setState((prevState) => ({
+            messages: [...prevState.messages, { ...message, isRead: true }],
+            openBtn: true,
+          }));
+        })
+        .on("messageRead", (messageId) => {
+          // Cập nhật trạng thái isRead của tin nhắn
+          console.log("messageRead ", messageId);
+          this.setState((prevState) => ({
+            messages: prevState.messages.map((msg) =>
+              msg._id === messageId ? { ...msg, isRead: true } : msg
+            ),
+          }));
+        });
+    }
   };
   getLastMessage = async () => {
     const userSession = sessionStorage.getItem("userSession")
@@ -143,17 +147,15 @@ class MessagePage extends Component {
       : null;
     const { chatList, selectedChat, messages, newMessage, openBtn, received } =
       this.state;
-    console.log("chatList", chatList);
-    console.log("received", received);
-    const user_receive = chatList.find(
-      (chat) => chat.withUser._id === received
-    );
-
     return (
       <div className="chat__app">
         <div className="chat__sidebar">
           <div className="search__bar">
-            <Input type="text" placeholder="Tìm kiếm trên Messenger" />
+            <Input
+              type="text"
+              placeholder="Tìm kiếm trên Messenger"
+              suffix={<IoMdSearch />}
+            />
           </div>
           <div className="chat__list">
             {chatList.map((chat) => (
@@ -165,11 +167,7 @@ class MessagePage extends Component {
                 onClick={() => this.handleChatSelect(chat.withUser._id)}
               >
                 <div className="avatar">
-                  <Avatar
-                    size={50}
-                    src={chat.withUser.avatar}
-                    alt="Avatar"
-                  />
+                  <Avatar size={50} src={chat.withUser.avatar} alt="Avatar" />
                 </div>
                 <div className="chat__info">
                   <h5>{chat.withUser.name}</h5>
@@ -185,12 +183,21 @@ class MessagePage extends Component {
         <div className="chat__box">
           <div className="chat__header">
             <h3>
+              {received && (
+                <Avatar
+                  size={50}
+                  src={
+                    chatList.find((chat) => chat.withUser._id === received)
+                      .withUser.avatar
+                  }
+                  alt="Avatar"
+                />
+              )}
               {chatList &&
                 received &&
                 chatList.find((chat) => chat.withUser._id === received).withUser
                   .name}
             </h3>
-            <p>{user_receive?.withUser.name}</p>
           </div>
           <div className="chat__messages">
             {messages.map((message, index) => (

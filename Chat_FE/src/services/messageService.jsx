@@ -39,8 +39,8 @@ export default class MessageService {
 
   markMessage = async (id) => {
     return await axios.patch(
-      API_MESSAGE + "/mark-read/" + id,
-      {},
+      API_MESSAGE + "/mark-read",
+      { id },
       {
         headers: { Authorization: `Bearer ${this.getToken()}` },
       }

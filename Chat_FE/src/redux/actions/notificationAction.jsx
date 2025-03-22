@@ -17,12 +17,7 @@ export const getNotifications = (id) => async (dispatch) => {
       });
     }
   } catch (error) {
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
+    console.log("error", error);
   }
 };
 
@@ -43,12 +38,7 @@ export const getReadNotifications = (id) => async (dispatch) => {
       });
     }
   } catch (error) {
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
+    console.log("error", error);
   }
 };
 
@@ -69,12 +59,7 @@ export const getUnreadNotifications = (id) => async (dispatch) => {
       });
     }
   } catch (error) {
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
+    console.log("error", error);
   }
 };
 
@@ -94,12 +79,7 @@ export const countUnreadNotifications = (id) => async (dispatch) => {
       });
     }
   } catch (error) {
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
+    console.log("error", error);
   }
 };
 
@@ -119,12 +99,7 @@ export const markAsReadNotification = (id) => async (dispatch) => {
       });
     }
   } catch (error) {
-    dispatch({
-      type: COMMON_ERROR_SET,
-      payload: error.response.data
-        ? error.response.data.message
-        : error.message,
-    });
+    console.log("error", error);
   }
 };
 
@@ -138,10 +113,7 @@ export const markAllAsReadNotification = (id) => async (dispatch) => {
     if (response.status === 200) {
       return response.data;
     } else {
-      dispatch({
-        type: COMMON_ERROR_SET,
-        payload: response.message,
-      });
+      console.log(response.message);
     }
   } catch (error) {
     console.log(error);

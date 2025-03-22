@@ -1,36 +1,68 @@
+import React, { Component } from "react";
 import { Table, Button, Space } from "antd";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import "../../css/Admin/MessageManagement.scss";
+import { connect } from "react-redux";
+import withRouter from "../../helpers/withRouter";
 
-const MessageManagement = () => {
-  const [messages, setMessages] = useState([]);
+class MessageManagement extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-  useEffect(() => {
-    axios.get("/api/messages").then((res) => setMessages(res.data));
-  }, []);
+  componentDidMount() {
+    axios.get("/api/messages").then((res) => {
+      this.setState({ messages: res.data });
+    });
+  }
 
-  const handleDelete = (messageId) => {
+  handleDelete = (messageId) => {
     axios.delete(`/api/messages/${messageId}`).then(() => {
-      setMessages(messages.filter(message => message._id !== messageId));
+      this.setState((prevState) => ({
+        messages: prevState.messages.filter(
+          (message) => message._id !== messageId
+        ),
+      }));
     });
   };
 
-  const columns = [
-    { title: "Người gửi", dataIndex: "senderId" },
-    { title: "Người nhận", dataIndex: "receiverId" },
-    { title: "Nội dung", dataIndex: "content" },
-    {
-      title: "Thao tác",
-      render: (_, record) => (
-        <Space>
-          <Button danger onClick={() => handleDelete(record._id)}>Xóa</Button>
-        </Space>
-      ),
-    },
-  ];
+  render() {
+    const columns = [
+      { title: "Người gửi", dataIndex: "senderId" },
+      { title: "Người nhận", dataIndex: "receiverId" },
+      { title: "Nội dung", dataIndex: "content" },
+      {
+        title: "Thao tác",
+        render: (_, record) => (
+          <Space>
+            <Button danger onClick={() => this.handleDelete(record._id)}>
+              Xóa
+            </Button>
+          </Space>
+        ),
+      },
+    ];
 
-  return <Table className="message-table" dataSource={messages} columns={columns} rowKey="_id" />;
+    return (
+      <Table
+        className="message-table"
+        dataSource={this.state.messages}
+        columns={columns}
+        rowKey="_id"
+      />
+    );
+  }
+}
+
+const mapStateToProps = (state) => ({
+  messages: state.messageReducer.messages,
+});
+
+const mapDispatchToProps = {
+  
 };
 
-export default MessageManagement;
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(MessageManagement)
+);

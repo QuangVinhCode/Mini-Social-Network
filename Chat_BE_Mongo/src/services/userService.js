@@ -49,7 +49,7 @@ export const loginUser = async (username, password) => {
     throw new Error("Username hoặc mật khẩu không chính xác.");
   }
   const token = jwt.sign(
-    { userId: user._id, username: user.username},
+    { userId: user._id, username: user.username },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES }
   );
@@ -162,4 +162,64 @@ export const findUsersBySimilarName = async (partialName) => {
     },
     { "profile.name": 1, "profile.avatar": 1, _id: 1 }
   );
+};
+
+export const getFriendsList = async (userId) => {
+  try {
+    const user = await User.findById(userId).populate(
+      "friends",
+      "username email profile"
+    );
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.friends;
+  } catch (error) {
+    console.error("Error getting friends list:", error);
+
+    res.status(500).json({
+      message: "Error retrieving friends list",
+      error: error.message || "Unknown error", // Lấy chi tiết lỗi
+    });
+  }
+};
+
+export const getFriendRequestsList = async (userId) => {
+  try {
+    const user = await User.findById(userId).populate(
+      "friendRequests",
+      "username email profile"
+    );
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.friendRequests;
+  } catch (error) {
+    console.error("Error getting friends list:", error);
+
+    res.status(500).json({
+      message: "Error retrieving friends list",
+      error: error.message || "Unknown error", // Lấy chi tiết lỗi
+    });
+  }
+};
+
+export const getFriendRequestsSentList = async (userId) => {
+  try {
+    const user = await User.findById(userId).populate(
+      "friendRequestsSent",
+      "username email profile"
+    );
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.friendRequestsSent;
+  } catch (error) {
+    console.error("Error getting friends list:", error);
+
+    res.status(500).json({
+      message: "Error retrieving friends list",
+      error: error.message || "Unknown error", // Lấy chi tiết lỗi
+    });
+  }
 };

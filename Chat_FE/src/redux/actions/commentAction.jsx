@@ -13,6 +13,7 @@ export const insertComment = (object) => async (dispatch) => {
   const service = new CommentService();
   try {
     console.log("Thêm bình luận");
+    console.log(object);
     const response = await service.insertComment(object);
 
     if (response.status === 201) {
@@ -20,7 +21,7 @@ export const insertComment = (object) => async (dispatch) => {
         type: COMMON_MESSAGE_SET,
         payload: "Bình luận đã được thêm",
       });
-      console.log(response)
+      console.log(response);
       return response.data;
     } else {
       dispatch({
@@ -43,7 +44,7 @@ export const replyToComment = (object) => async (dispatch) => {
   const service = new CommentService();
   try {
     console.log("Trả lời bình luận");
-    console.log(object)
+    console.log(object);
     const response = await service.replyToComment(object);
 
     if (response.status === 201) {

@@ -11,6 +11,8 @@ import {
 } from "../../redux/actions/commentAction.jsx";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
+import ImageGrid from "../Post/ImageGrid.jsx";
+import { setError } from "../../redux/actions/commonAction.jsx";
 
 class PostCard extends Component {
   constructor(props) {
@@ -58,16 +60,22 @@ class PostCard extends Component {
       : null;
     const { comment_content } = this.state;
     const { post } = this.props;
-    const comment = {
-      postId: post._id,
-      userId: userSession.id,
-      content: comment_content,
-    };
-    const flag = await this.props.insertComment(comment);
-    if (flag) {
-      this.setState({ comment_content: "" });
-      this.displayComments();
+    if (userSession)
+    {
+      const comment = {
+        postId: post._id,
+        userId: userSession.id,
+        content: comment_content,
+      };
+      const flag = await this.props.insertComment(comment);
+      if (flag) {
+        this.setState({ comment_content: "" });
+        this.displayComments();
+      }
+    }else{
+      this.props.router.dispatch(setError("Yêu cầu đăng nhập"));
     }
+   
   };
 
   seeDetails = (id) => {
@@ -91,26 +99,7 @@ class PostCard extends Component {
           onClick={() => this.seeDetails(post._id)}
           className="post-card__images"
         >
-          <div
-            className={`post-card__images ${
-              post.images.length === 1
-                ? "one"
-                : post.images.length === 2
-                ? "two"
-                : post.images.length === 3
-                ? "three"
-                : post.images.length === 4
-                ? "four"
-                : "more"
-            }`}
-          >
-            {post.images.slice(0, 4).map((img, index) => (
-              <img key={index} src={img} alt={`Image ${index + 1}`} />
-            ))}
-            {post.images.length > 4 && (
-              <div className="overlay">+{post.images.length - 4}</div>
-            )}
-          </div>
+         <ImageGrid images={post.images} />
         </div>
 
         <div className="post-card__footer">

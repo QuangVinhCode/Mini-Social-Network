@@ -83,6 +83,36 @@ export default class UserService {
   };
 
   findUserName = async (name) => {
-    return await axios.get(API_USER + "/search/" + name);
+    return await axios.get(API_USER + "/search/" + name, {
+      headers: { Authorization: `Bearer ${this.getToken()}` },
+    });
+  };
+
+  getFriendsList = async (userId) => {
+    return await axios.get(API_USER + "/friends/" + userId, {
+      headers: { Authorization: `Bearer ${this.getToken()}` },
+    });
+  };
+
+  getFriendRequestsList = async (userId) => {
+    return await axios.get(API_USER + "/friend-requests/" + userId, {
+      headers: { Authorization: `Bearer ${this.getToken()}` },
+    });
+  };
+
+  getFriendRequestsSentList = async (userId) => {
+    return await axios.get(API_USER + "/friend-requests-sent/" + userId, {
+      headers: { Authorization: `Bearer ${this.getToken()}` },
+    });
+  };
+
+  logoutUser = async (userId) => {
+    return await axios.patch(
+      API_USER + "/logout",
+      { userId },
+      {
+        headers: { Authorization: `Bearer ${this.getToken()}` },
+      }
+    );
   };
 }

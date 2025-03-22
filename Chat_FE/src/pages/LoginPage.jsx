@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import React, { Component } from "react";
 import withRouter from "../helpers/withRouter";
 import { connect } from "react-redux";
@@ -24,6 +24,16 @@ class LoginPage extends Component {
   onFinishFailed = (errorInfo) => {
     console.log(errorInfo);
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.message && this.props.message !== prevProps.message) {
+      message.success(this.props.message); 
+    }
+
+    if (this.props.error && this.props.error !== prevProps.error) {
+      message.error(this.props.error);
+    }
+  }
 
   componentWillMount() {}
 
@@ -75,7 +85,10 @@ class LoginPage extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  message: state.commonReducer.message,
+  error: state.commonReducer.error
+});
 
 const mapDispatchToProps = {
   loginUser,
